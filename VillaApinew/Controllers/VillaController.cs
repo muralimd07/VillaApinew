@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,13 @@ namespace VillaApinew.Controllers
     {
         private readonly ILogger<VillaController> _logger;
         private readonly ApplicationDbContext _db;
+        private readonly IMapper _mapper;
 
-        public VillaController(ILogger<VillaController> logger,ApplicationDbContext db)
+        public VillaController(ILogger<VillaController> logger,ApplicationDbContext db,IMapper mapper)
         {
             _logger = logger;
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -26,7 +29,11 @@ namespace VillaApinew.Controllers
 
             // _logger.LogInformation("get information");
             //return Ok(VillaDatastore.VillaList);
-            return Ok(await _db.Villas.ToListAsync());
+            //return Ok(await _db.Villas.ToListAsync());
+
+            List<Villa> Villalist = await _db.Villas.ToListAsync();
+
+            return Ok(_mapper.Map<List<VillaDto>>(Villalist));
 
         }
 
@@ -44,7 +51,7 @@ namespace VillaApinew.Controllers
             if (villa == null) {
                 return NotFound();
             }
-            return Ok(villa);
+            return Ok(_mapper.Map<VillaDto>(villa));
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -60,17 +67,19 @@ namespace VillaApinew.Controllers
             }
 
 
-            Villa modal = new()
-            {
-                Amenity = villadto.Amenity,
-                Details = villadto.Details,
-               // Id = villadto.Id,     so only removed
-                ImageUrl = villadto.ImageUrl,
-                Name = villadto.Name,
-                Occupancy = villadto.Occupancy,
-                Rate = villadto.Rate,
-                Sqrt = villadto.Sqrt,
-            };
+            Villa modal=_mapper.Map<Villa>(villadto);
+
+            //Villa modal = new()
+            //{
+            //    Amenity = villadto.Amenity,
+            //    Details = villadto.Details,
+            //   // Id = villadto.Id,     so only removed
+            //    ImageUrl = villadto.ImageUrl,
+            //    Name = villadto.Name,
+            //    Occupancy = villadto.Occupancy,
+            //    Rate = villadto.Rate,
+            //    Sqrt = villadto.Sqrt,
+            //};
 
            //villadto.Id = _db.Villas.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
            await _db.Villas.AddAsync(modal);
@@ -111,19 +120,20 @@ namespace VillaApinew.Controllers
             if (villadto == null) { 
                 return BadRequest();
             }
-           // var villad=_db.Villas.FirstOrDefault(v => v.Id == id);
+            // var villad=_db.Villas.FirstOrDefault(v => v.Id == id);
 
-            Villa modal = new()
-            {
-                Amenity = villadto.Amenity,
-                Details = villadto.Details,
-                Id = villadto.Id,
-                ImageUrl = villadto.ImageUrl,
-                Name = villadto.Name,
-                Occupancy = villadto.Occupancy,
-                Rate = villadto.Rate,
-                Sqrt = villadto.Sqrt,
-            };
+            Villa modal = _mapper.Map<Villa>(villadto);
+            //Villa modal = new()
+            //{
+            //    Amenity = villadto.Amenity,
+            //    Details = villadto.Details,
+            //    Id = villadto.Id,
+            //    ImageUrl = villadto.ImageUrl,
+            //    Name = villadto.Name,
+            //    Occupancy = villadto.Occupancy,
+            //    Rate = villadto.Rate,
+            //    Sqrt = villadto.Sqrt,
+            //};
             _db.Villas.Update(modal);
             await _db.SaveChangesAsync();
             return NoContent();
@@ -152,17 +162,18 @@ namespace VillaApinew.Controllers
             }
             //villadto
 
-            VillaUpdateDto modal = new()
-            {
-                Amenity = villadto.Amenity,
-                Details = villadto.Details,
-                Id = villadto.Id,
-                ImageUrl = villadto.ImageUrl,
-                Name = villadto.Name,
-                Occupancy = villadto.Occupancy,
-                Rate = villadto.Rate,
-                Sqrt = villadto.Sqrt,
-            };
+            VillaUpdateDto modal = _mapper.Map<VillaUpdateDto>(villadto);
+            //VillaUpdateDto modal = new()
+            //{
+            //    Amenity = villadto.Amenity,
+            //    Details = villadto.Details,
+            //    Id = villadto.Id,
+            //    ImageUrl = villadto.ImageUrl,
+            //    Name = villadto.Name,
+            //    Occupancy = villadto.Occupancy,
+            //    Rate = villadto.Rate,
+            //    Sqrt = villadto.Sqrt,
+            //};
 
             patch.ApplyTo(modal, ModelState);
 
@@ -171,17 +182,19 @@ namespace VillaApinew.Controllers
                 return BadRequest(ModelState);
             }
 
-            Villa modal2 = new()
-            {
-                Amenity = modal.Amenity,
-                Details = modal.Details,
-                Id = modal.Id,
-                ImageUrl = modal.ImageUrl,
-                Name = modal.Name,
-                Occupancy = modal.Occupancy,
-                Rate = modal.Rate,
-                Sqrt = modal.Sqrt,
-            };
+            Villa modal2= _mapper.Map<Villa>(modal);
+
+            //Villa modal2 = new()
+            //{
+            //    Amenity = modal.Amenity,
+            //    Details = modal.Details,
+            //    Id = modal.Id,
+            //    ImageUrl = modal.ImageUrl,
+            //    Name = modal.Name,
+            //    Occupancy = modal.Occupancy,
+            //    Rate = modal.Rate,
+            //    Sqrt = modal.Sqrt,
+            //};
 
             _db.Villas.Update(modal2);
             await _db.SaveChangesAsync();
