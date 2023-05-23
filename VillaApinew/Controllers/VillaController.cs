@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using VillaApinew.Data;
 using VillaApinew.Modal;
@@ -9,10 +10,18 @@ namespace VillaApinew.Controllers
     [ApiController]
     public class VillaController : ControllerBase
     {
+        private readonly ILogger<VillaController> _logger;
+
+        public VillaController(ILogger<VillaController> logger)
+        {
+            _logger = logger;
+        }
 
         [HttpGet]
         public ActionResult<List<VillaDto>> GetVillaList()
         {
+
+            _logger.LogInformation("get information");
             return Ok(VillaDatastore.VillaList);
         }
 
@@ -92,5 +101,38 @@ namespace VillaApinew.Controllers
 
 
         }
+
+        [HttpPatch("{id:int}",Name = "UpdatePartialVilla")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDto> patch)
+        {
+            if (patch == null)
+            {
+                return BadRequest();
+            }
+            var villad = VillaDatastore.VillaList.FirstOrDefault(v => v.Id == id);
+
+            if(villad == null)
+            {
+                return BadRequest();
+            }
+
+            patch.ApplyTo(villad,ModelState);
+
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return NoContent();
+
+
+        }
+
+
+
     }
 }
