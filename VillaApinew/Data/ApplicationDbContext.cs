@@ -9,7 +9,7 @@ namespace VillaApinew.Data
         {
             
         }
-        DbSet<Villa> Villas { get; set; }
+        public DbSet<Villa> Villas { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
