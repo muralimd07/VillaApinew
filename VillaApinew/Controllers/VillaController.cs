@@ -21,12 +21,12 @@ namespace VillaApinew.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<VillaDto>> GetVillaList()
+        public async Task<ActionResult<List<VillaDto>>> GetVillaList()
         {
 
             // _logger.LogInformation("get information");
             //return Ok(VillaDatastore.VillaList);
-            return Ok(_db.Villas.ToList());
+            return Ok(await _db.Villas.ToListAsync());
 
         }
 
@@ -34,13 +34,13 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<VillaDto> GetVilla(int id)
+        public async Task<ActionResult<VillaDto>> GetVilla(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            var villa= _db.Villas.FirstOrDefault(u => u.Id == id);
+            var villa=await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
             if (villa == null) {
                 return NotFound();
             }
@@ -52,7 +52,7 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public ActionResult<VillaDto> Createdata([FromBody] VillaCreateDto villadto) //changed to villadto to villacreate
+        public async Task<ActionResult<VillaDto>> Createdata([FromBody] VillaCreateDto villadto) //changed to villadto to villacreate
         {
             if(villadto == null)
             {
@@ -73,8 +73,8 @@ namespace VillaApinew.Controllers
             };
 
            //villadto.Id = _db.Villas.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-           _db.Villas.Add(modal);
-        _db.SaveChanges();
+           await _db.Villas.AddAsync(modal);
+           await _db.SaveChangesAsync();
             // VillaDatastore.VillaList.Add(villadto);
             // return Ok(villadto);
             //sometimes we nned to expose the data that time createroute will helpfull
@@ -86,27 +86,27 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            var villa=_db.Villas.FirstOrDefault(u=>u.Id == id);
+            var villa=await _db.Villas.FirstOrDefaultAsync(u=>u.Id == id);
 
             if (villa == null)
             {
                 return NotFound();
             }
             _db.Villas.Remove(villa);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
 
 
 
         }
         [HttpPut("{id:int}")]
-        public IActionResult UpdateVilla(int id, [FromBody] VillaUpdateDto villadto)
+        public async Task<IActionResult> UpdateVilla(int id, [FromBody] VillaUpdateDto villadto)
         {
             if (villadto == null) { 
                 return BadRequest();
@@ -125,7 +125,7 @@ namespace VillaApinew.Controllers
                 Sqrt = villadto.Sqrt,
             };
             _db.Villas.Update(modal);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
 
 
@@ -138,13 +138,13 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDto> patch)
+        public async  Task<IActionResult> UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDto> patch)
         {
             if (patch == null)
             {
                 return BadRequest();
             }
-            var villadto =_db.Villas.AsNoTracking().FirstOrDefault(v => v.Id == id);
+            var villadto =await _db.Villas.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
 
             if(villadto == null)
             {
@@ -184,7 +184,7 @@ namespace VillaApinew.Controllers
             };
 
             _db.Villas.Update(modal2);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
 
 
