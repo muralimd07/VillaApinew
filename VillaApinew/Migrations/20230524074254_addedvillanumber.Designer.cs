@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VillaApinew.Data;
 
@@ -11,9 +12,11 @@ using VillaApinew.Data;
 namespace VillaApinew.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230524074254_addedvillanumber")]
+    partial class addedvillanumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,7 +73,7 @@ namespace VillaApinew.Migrations
                         {
                             Id = 1,
                             Amenity = "",
-                            CreateDate = new DateTime(2023, 5, 24, 15, 53, 38, 763, DateTimeKind.Local).AddTicks(2599),
+                            CreateDate = new DateTime(2023, 5, 24, 13, 12, 54, 757, DateTimeKind.Local).AddTicks(757),
                             Details = "details 1",
                             ImageUrl = "",
                             Name = "Royal Villa",
@@ -83,7 +86,7 @@ namespace VillaApinew.Migrations
                         {
                             Id = 2,
                             Amenity = "",
-                            CreateDate = new DateTime(2023, 5, 24, 15, 53, 38, 763, DateTimeKind.Local).AddTicks(2615),
+                            CreateDate = new DateTime(2023, 5, 24, 13, 12, 54, 757, DateTimeKind.Local).AddTicks(770),
                             Details = "details 2",
                             ImageUrl = "",
                             Name = "Royal Villa2",
@@ -96,7 +99,7 @@ namespace VillaApinew.Migrations
                         {
                             Id = 3,
                             Amenity = "",
-                            CreateDate = new DateTime(2023, 5, 24, 15, 53, 38, 763, DateTimeKind.Local).AddTicks(2616),
+                            CreateDate = new DateTime(2023, 5, 24, 13, 12, 54, 757, DateTimeKind.Local).AddTicks(771),
                             Details = "details 3",
                             ImageUrl = "",
                             Name = "Royal Villa3",
@@ -118,29 +121,13 @@ namespace VillaApinew.Migrations
                     b.Property<DateTime>("Updatedate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VillaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("specialdetils")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VillaNo");
 
-                    b.HasIndex("VillaId");
-
                     b.ToTable("Villanumber");
-                });
-
-            modelBuilder.Entity("VillaApinew.Modal.VillaNumber", b =>
-                {
-                    b.HasOne("VillaApinew.Modal.Villa", "villa")
-                        .WithMany()
-                        .HasForeignKey("VillaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("villa");
                 });
 #pragma warning restore 612, 618
         }

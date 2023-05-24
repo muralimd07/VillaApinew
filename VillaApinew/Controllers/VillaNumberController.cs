@@ -11,14 +11,14 @@ using VillaApinew.Repository.IRepository;
 namespace VillaApinew.Controllers
 {
     //[Route("api/[controller]")]
-    [Route("api/VillaApi")]
+    [Route("api/VillaNumberApi")]
     [ApiController]
-    public class VillaController : ControllerBase
+    public class VillaNumberController : ControllerBase
     {
         private readonly ILogger<VillaController> _logger;
         // private readonly ApplicationDbContext _db;
         //use Irepository
-        private readonly IVillaRepository _db; 
+        private readonly IVillaNumberRepository _db; 
         private readonly IMapper _mapper;
 
         protected ApiResponse _response;
@@ -26,7 +26,7 @@ namespace VillaApinew.Controllers
         //need to avoid db context in controller
 
 
-        public VillaController(ILogger<VillaController> logger,IVillaRepository db,IMapper mapper)
+        public VillaNumberController(ILogger<VillaController> logger,IVillaNumberRepository db,IMapper mapper)
         {
             _logger = logger;
             _db = db;
@@ -35,7 +35,7 @@ namespace VillaApinew.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ApiResponse>>> GetVillaList()
+        public async Task<ActionResult<List<ApiResponse>>> GetVillaNumberList()
         {
 
             // _logger.LogInformation("get information");
@@ -44,8 +44,8 @@ namespace VillaApinew.Controllers
 
             try
             {
-                List<Villa> Villalist = await _db.GetAll();
-                _response.Result = _mapper.Map<List<VillaDto>>(Villalist);
+                List<VillaNumber> VillaNumberlist = await _db.GetAll();
+                _response.Result = _mapper.Map<List<VillaNumberDto>>(VillaNumberlist);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -57,11 +57,11 @@ namespace VillaApinew.Controllers
 
         }
 
-        [HttpGet("{id:int}",Name = "GetVilla")]
+        [HttpGet("{id:int}",Name = "GetVillaNumber")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse>> GetVilla(int id)
+        public async Task<ActionResult<ApiResponse>> GetVillaNumber(int id)
         {
             try
             {
@@ -69,13 +69,13 @@ namespace VillaApinew.Controllers
                 {
                     return BadRequest();
                 }
-                var villa = await _db.Get(u => u.Id == id);
+                var villa = await _db.Get(u => u.VillaNo == id);
                 if (villa == null)
                 {
                     return NotFound();
                 }
 
-                _response.Result = _mapper.Map<VillaDto>(villa);
+                _response.Result = _mapper.Map<VillaNumberDto>(villa);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
             }
@@ -92,7 +92,7 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<ApiResponse>> Createdata([FromBody] VillaCreateDto villadto) //changed to villadto to villacreate
+        public async Task<ActionResult<ApiResponse>> CreateNumberdata([FromBody] VillaNumberCreateDto villadto) //changed to villadto to villacreate
         {
             try
             {
@@ -102,7 +102,16 @@ namespace VillaApinew.Controllers
                 }
 
 
-                Villa modal = _mapper.Map<Villa>(villadto);
+                //VillaNumber modal = _mapper.Map<VillaNumber>(villadto);
+
+
+                VillaNumber modal = new()
+                {
+                    VillaId = villadto.VillaId,
+                    VillaNo = villadto.VillaNo,
+                    specialdetils = villadto.specialdetials
+
+                };
 
                 //Villa modal = new()
                 //{
@@ -121,11 +130,11 @@ namespace VillaApinew.Controllers
                 await _db.Save();
                 // VillaDatastore.VillaList.Add(villadto);
                 // return Ok(villadto);
-                //sometimes we nned to expose the data that time createroute will helpfull
+                //sometimes we need to expose the data that time createroute will helpfull
 
-                _response.Result = _mapper.Map<List<VillaDto>>(modal);
+                //_response.Result = _mapper.Map<List<VillaNumberDto>>(modal);
                 _response.StatusCode = HttpStatusCode.Created;
-                return CreatedAtRoute("GetVilla", new { modal.Id }, _response);
+                return CreatedAtRoute("GetVillaNumber", new { modal.VillaNo }, _response);
             }
             catch (Exception ex)
             {
@@ -140,7 +149,7 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse>> Delete(int id)
+        public async Task<ActionResult<ApiResponse>> DeleteNumber(int id)
         {
             try
             {
@@ -148,7 +157,7 @@ namespace VillaApinew.Controllers
                 {
                     return BadRequest();
                 }
-                var villa = await _db.Get(u => u.Id == id);
+                var villa = await _db.Get(u => u.VillaNo == id);
                 //Villa modal = _mapper.Map<Villa>(villa);
 
                 if (villa == null)
@@ -173,7 +182,7 @@ namespace VillaApinew.Controllers
 
         }
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<ApiResponse>> UpdateVilla(int id, [FromBody] VillaUpdateDto villadto)
+        public async Task<ActionResult<ApiResponse>> UpdateNumberVilla(int id, [FromBody] VillaNumberUpdateDto villadto)
         {
 
             try
@@ -184,7 +193,7 @@ namespace VillaApinew.Controllers
                 }
                 // var villad=_db.Villas.FirstOrDefault(v => v.Id == id);
 
-                Villa modal = _mapper.Map<Villa>(villadto);
+                VillaNumber modal = _mapper.Map<VillaNumber>(villadto);
                 //Villa modal = new()
                 //{
                 //    Amenity = villadto.Amenity,
@@ -210,18 +219,18 @@ namespace VillaApinew.Controllers
             return _response;
         }
 
-        [HttpPatch("{id:int}",Name = "UpdatePartialVilla")]
+        [HttpPatch("{id:int}",Name = "UpdatePartialNumberVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async  Task<IActionResult> UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDto> patch)
+        public async  Task<IActionResult> UpdatePartialNumberVilla(int id, JsonPatchDocument<VillaNumberUpdateDto> patch)
         {
             if (patch == null)
             {
                 return BadRequest();
             }
-            var villadto =await _db.Get(v => v.Id == id);
+            var villadto =await _db.Get(v => v.VillaNo == id);
 
             if(villadto == null)
             {
@@ -229,7 +238,7 @@ namespace VillaApinew.Controllers
             }
             //villadto
 
-            VillaUpdateDto modal = _mapper.Map<VillaUpdateDto>(villadto);
+            VillaNumberUpdateDto modal = _mapper.Map<VillaNumberUpdateDto>(villadto);
             //VillaUpdateDto modal = new()
             //{
             //    Amenity = villadto.Amenity,
@@ -249,7 +258,7 @@ namespace VillaApinew.Controllers
                 return BadRequest(ModelState);
             }
 
-            Villa modal2= _mapper.Map<Villa>(modal);
+            VillaNumber modal2= _mapper.Map<VillaNumber>(modal);
 
             //Villa modal2 = new()
             //{
