@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VillaApinew.Data;
 using VillaApinew.Modal;
+using VillaApinew.Repository.IRepository;
 
 namespace VillaApinew.Controllers
 {
@@ -13,10 +14,15 @@ namespace VillaApinew.Controllers
     public class VillaController : ControllerBase
     {
         private readonly ILogger<VillaController> _logger;
-        private readonly ApplicationDbContext _db;
+        // private readonly ApplicationDbContext _db;
+        //use Irepository
+        private readonly IVillaRepository _db; 
         private readonly IMapper _mapper;
 
-        public VillaController(ILogger<VillaController> logger,ApplicationDbContext db,IMapper mapper)
+        //need to avoid db context in controller
+
+
+        public VillaController(ILogger<VillaController> logger,IVillaRepository db,IMapper mapper)
         {
             _logger = logger;
             _db = db;
@@ -31,7 +37,7 @@ namespace VillaApinew.Controllers
             //return Ok(VillaDatastore.VillaList);
             //return Ok(await _db.Villas.ToListAsync());
 
-            List<Villa> Villalist = await _db.Villas.ToListAsync();
+            List<Villa> Villalist = await _db.GetAll();
 
             return Ok(_mapper.Map<List<VillaDto>>(Villalist));
 
@@ -47,7 +53,7 @@ namespace VillaApinew.Controllers
             {
                 return BadRequest();
             }
-            var villa=await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
+            var villa=await _db.Get(u => u.Id == id);
             if (villa == null) {
                 return NotFound();
             }
@@ -82,8 +88,8 @@ namespace VillaApinew.Controllers
             //};
 
            //villadto.Id = _db.Villas.OrderByDescending(u => u.Id).FirstOrDefault().Id + 1;
-           await _db.Villas.AddAsync(modal);
-           await _db.SaveChangesAsync();
+           await _db.Create(modal);
+            await _db.Save();
             // VillaDatastore.VillaList.Add(villadto);
             // return Ok(villadto);
             //sometimes we nned to expose the data that time createroute will helpfull
@@ -95,20 +101,22 @@ namespace VillaApinew.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
-            var villa=await _db.Villas.FirstOrDefaultAsync(u=>u.Id == id);
+            var villa= await _db.Get(u=>u.Id == id);
+            //Villa modal = _mapper.Map<Villa>(villa);
 
             if (villa == null)
             {
                 return NotFound();
             }
-            _db.Villas.Remove(villa);
-            await _db.SaveChangesAsync();
+
+            await _db.Remove(villa);
+            await _db.Save();
             return NoContent();
 
 
@@ -134,8 +142,8 @@ namespace VillaApinew.Controllers
             //    Rate = villadto.Rate,
             //    Sqrt = villadto.Sqrt,
             //};
-            _db.Villas.Update(modal);
-            await _db.SaveChangesAsync();
+            await _db.Update(modal);
+            await _db.Save();
             return NoContent();
 
 
@@ -154,7 +162,7 @@ namespace VillaApinew.Controllers
             {
                 return BadRequest();
             }
-            var villadto =await _db.Villas.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
+            var villadto =await _db.Get(v => v.Id == id);
 
             if(villadto == null)
             {
@@ -196,8 +204,8 @@ namespace VillaApinew.Controllers
             //    Sqrt = modal.Sqrt,
             //};
 
-            _db.Villas.Update(modal2);
-            await _db.SaveChangesAsync();
+            _db.Update(modal2);
+            await _db.Save();
             return NoContent();
 
 
