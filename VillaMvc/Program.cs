@@ -1,10 +1,12 @@
+using VillaMvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
-
+builder.Services.AddAutoMapper(typeof(MapperConfig));
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
