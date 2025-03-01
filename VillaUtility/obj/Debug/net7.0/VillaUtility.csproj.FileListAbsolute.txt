@@ -1,0 +1,12 @@
+C:\D\c# Web Api\VillaApinew\VillaUtility\bin\Debug\net7.0\VillaUtility.deps.json
+C:\D\c# Web Api\VillaApinew\VillaUtility\bin\Debug\net7.0\VillaUtility.dll
+C:\D\c# Web Api\VillaApinew\VillaUtility\bin\Debug\net7.0\VillaUtility.pdb
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.csproj.AssemblyReference.cache
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.GeneratedMSBuildEditorConfig.editorconfig
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.AssemblyInfoInputs.cache
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.AssemblyInfo.cs
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.csproj.CoreCompileInputs.cache
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.dll
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\refint\VillaUtility.dll
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\VillaUtility.pdb
+C:\D\c# Web Api\VillaApinew\VillaUtility\obj\Debug\net7.0\ref\VillaUtility.dll

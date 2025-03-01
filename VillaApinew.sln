@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VillaApinew", "VillaApinew\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VillaUtility", "VillaUtility\VillaUtility.csproj", "{DC9733E2-F679-47AD-814A-1F781D6620C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VillaWeb", "VillaWeb\VillaWeb.csproj", "{301971CA-F26F-41D2-B9D9-5808B16685D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DC9733E2-F679-47AD-814A-1F781D6620C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC9733E2-F679-47AD-814A-1F781D6620C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC9733E2-F679-47AD-814A-1F781D6620C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{301971CA-F26F-41D2-B9D9-5808B16685D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{301971CA-F26F-41D2-B9D9-5808B16685D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{301971CA-F26F-41D2-B9D9-5808B16685D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{301971CA-F26F-41D2-B9D9-5808B16685D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
